@@ -1,0 +1,59 @@
+class Employee:
+  className = 'Employee'
+
+  def __init__(self, firstName, lastName, patronymic = None, salary = 0, bonusRate = 0, workingHoursAmnt = 40):
+    if len(firstName) <=0 or len(lastName) <= 0:
+        print('firstName and lastName shouldn\'t be empty')
+    self._firstName = firstName
+    self._lastName = lastName
+    self._patronymic = patronymic
+    self._salary = salary
+    self._bonusRate = bonusRate / 100.0
+    self._workingHoursAmnt = workingHoursAmnt
+
+  def __add__(self, other):
+      frankestein = Employee(self._firstName, other._lastName, self._patronymic, self._salary + other._salary, max(self._bonusRate, other._bonusRate) * 100.0)
+      return frankestein
+
+  def info(self):
+    return self._firstName + (' ' + self._patronymic if not self._patronymic is None else '') + ' ' + self._lastName + \
+    '('+ str(self._salary) + '$ per month, bonus ' + str(self._bonusRate*100) + '%, working ' + str(self._workingHoursAmnt) + ' hours per week)'
+
+  def bonus(self):
+    return self._salary * self._bonusRate
+
+  def paymentPerHour(self):
+    return float(self._salary) / float(self._workingHoursAmnt)
+
+
+class SeniorEmployee(Employee):
+    className = 'SeniorEmployee'
+
+    def __init__(self, firstName, lastName, patronymic = None, salary = 0, bonusRate = 20, workingHoursAmnt = 40):
+        Employee.__init__(self, firstName, lastName, patronymic, salary, bonusRate, workingHoursAmnt)
+
+
+class Manager(Employee):
+    className = 'Manager'
+    def __init__(self, firstName, lastName, patronymic = None, salary = 0, bonusRate = 30, workingHoursAmnt = 40):
+        Employee.__init__(self, firstName, lastName, patronymic, salary, bonusRate, workingHoursAmnt)
+
+
+def main():
+    e = Employee('James', 'Bond', None, 100000, 50, 24*7)
+    print(e.info())
+    print('bonus = ' + str(e.bonus()) + ', payment per hour = ' + str(e.paymentPerHour()))
+
+    major = SeniorEmployee('John', 'Doe', None, 10000)
+    print('Major ---')
+    print(major.info())
+
+    manager = Manager('Mark', 'Zuckerberg', None, 30000)
+    print('Manager ---')
+    print(manager.info(),'\n')
+
+    frankestein = major + manager
+    print(frankestein.info())
+
+
+main()
